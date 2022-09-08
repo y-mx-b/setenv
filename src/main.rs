@@ -12,6 +12,10 @@ fn main() {
     let v = cli.verbose;
 
     // TODO check if provided file is a file
+    if !cli.file.is_file() {
+        eprintln!("Input file is not a file.");
+        return;
+    }
 
     let output_name = match cli.output {
         Some(name) => name,
