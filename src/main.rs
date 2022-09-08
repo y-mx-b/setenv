@@ -10,12 +10,19 @@ fn main() {
     let cli = Cli::parse();
 
     let v = cli.verbose;
+
+    // TODO check if provided file is a file
+
     let output_name = match cli.output {
         Some(name) => name,
-        // WARNING will crash if file name containts invalid Unicode
         None => format!(
             "{}.{}",
-            cli.file.file_stem().unwrap().to_str().unwrap().to_string(),
+            match cli.file.file_stem() {
+                None => panic!("No file name!"),
+                // WARNING will crash if file name containts invalid Unicode, fix somehow idk
+                // does this even need fixing?
+                stem => stem.unwrap().to_str().unwrap().to_string(),
+            },
             cli.format.to_string()
         ),
     };
