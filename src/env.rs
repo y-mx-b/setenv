@@ -5,6 +5,7 @@ use std::collections::HashMap;
 pub struct Env {
     #[serde(alias = "env-vars")]
     env_vars: HashMap<String, Vec<String>>,
+    // TODO add aliases
 }
 
 impl Env {

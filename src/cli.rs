@@ -18,9 +18,9 @@ pub struct Cli {
     #[clap(short, long, arg_enum, value_parser)]
     pub format: Format,
 
-    /// Sets a custom config file
-    #[clap(short, long, value_parser, value_name = "CONFIG")]
-    pub config: Option<PathBuf>,
+    /// The path of the shell to use in the hashbang
+    #[clap(short, long, value_parser)]
+    pub shell_path: Option<PathBuf>,
 
     /// Print extra information
     #[clap(short, long, action)]
