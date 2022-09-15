@@ -8,7 +8,7 @@ toc::[]
 == Features
 
 - Set PATH and other environment variables in a single file
-- Set aliases/abbreviations to be used across different shells
+- Set aliases/abbreviations to be used across different shells (TODO)
 
 == Usage
 
