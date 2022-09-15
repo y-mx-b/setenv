@@ -1,4 +1,5 @@
 mod cli;
+mod env;
 mod format;
 mod helper;
 
@@ -39,6 +40,7 @@ fn main() {
     // convert input TOML to shell script
     match cli.format {
         Format::Sh => {}
-        _ => {}
+        Format::Fish => {}
+        Format::Tcsh => {}
     }
 }
