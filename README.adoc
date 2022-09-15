@@ -13,6 +13,4 @@ toc::[]
 == Usage
 
 [source,sh]
----
 setenv my_env.toml --format fish --output env.fish
----
