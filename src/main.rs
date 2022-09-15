@@ -6,6 +6,9 @@ mod helper;
 use clap::Parser;
 use cli::*;
 use format::*;
+use std::fs;
+use env::Env;
+use std::io::Write;
 
 fn main() {
     let cli = Cli::parse();
@@ -37,10 +40,22 @@ fn main() {
     vprintln!(v, "Output File: {}", output_name);
     vprintln!(v, "Format: {}", cli.format);
 
+    // TODO do this safely, better error messages
+    // decode env file from TOML
+    let toml_contents = fs::read_to_string(cli.file).expect("Failed to read file");
+    let data: Env = toml::from_str(&toml_contents).unwrap();
+    vprintln!(v, "Contents:\n{:?}", data);
+
     // convert input TOML to shell script
-    match cli.format {
-        Format::Sh => {}
-        Format::Fish => {}
-        Format::Tcsh => {}
-    }
+    let output = match cli.format {
+        Format::Sh => data.to_sh(),
+        Format::Fish => data.to_fish(),
+        Format::Tcsh => data.to_tcsh(),
+    };
+    vprintln!(v, "Output:\n{}", output);
+
+    // write output to file
+    // TODO do it more safely
+    let mut output_file = fs::File::create(output_name).unwrap();
+    output_file.write_all(output.as_bytes()).unwrap();
 }
