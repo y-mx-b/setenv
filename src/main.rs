@@ -48,26 +48,10 @@ fn main() {
     vprintln!(v, "Contents:\n{:?}", data);
 
     // convert input TOML to shell script
-    let output = match cli.format {
-        Format::Sh => data.to_sh(),
-        Format::Fish => data.to_fish(),
-        Format::Tcsh => data.to_tcsh(),
-    };
+    let output = data.to_string(cli.format);
 
     // create new output file, clear if already exists
     let mut output_file = fs::File::create(output_name).unwrap();
-
-    // add hashbang
-    // TODO do it more safely
-    let shell_path: PathBuf = match cli.shell_path {
-        Some(shell) => shell,
-        None => match cli.format {
-            Format::Sh => PathBuf::from("/usr/bin/sh"),
-            Format::Fish => PathBuf::from("/usr/bin/fish"),
-            Format::Tcsh => PathBuf::from("/usr/bin/tcsh"),
-        }
-    };
-    output_file.write_all(vec!["#!", shell_path.to_str().unwrap()].join("").as_bytes()).unwrap();
 
     // write output to file
     // TODO do it more safely
