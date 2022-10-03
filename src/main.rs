@@ -1,11 +1,12 @@
 mod cli;
 mod env;
 mod format;
-mod helper;
 
 use clap::Parser;
 use cli::*;
 use env::Env;
+use env_logger;
+use log::{debug, info};
 use std::fs;
 use std::io::Write;
 use std::path::PathBuf;
@@ -13,6 +14,9 @@ use std::process::ExitCode;
 
 fn main() -> std::io::Result<ExitCode> {
     let cli = Cli::parse();
+    env_logger::Builder::new()
+        .filter_level(cli.verbose.log_level_filter())
+        .init();
 
     // exit if input is not a file
     if !cli.file.is_file() {
@@ -21,22 +25,22 @@ fn main() -> std::io::Result<ExitCode> {
     }
 
     // initialize relevant information
-    let v = cli.verbose;
     let output_path = match cli.output {
         Some(file_name) => PathBuf::from(file_name),
         None => cli.file.with_extension(cli.format.to_string()),
     };
 
     // vprint useful information
-    vprintln!(v, "Input File: {:?}", cli.file);
-    vprintln!(v, "Output File: {:?}", output_path);
-    vprintln!(v, "Format: {}", cli.format);
+    info!("Input File: {:?}", cli.file);
+    info!("Output File: {:?}", output_path);
+    info!("Format: {}", cli.format);
 
     // TODO do this safely, better error messages
     // decode env file from TOML
     let toml_contents = fs::read_to_string(cli.file)?;
+    debug!("TOML:\n{}", toml_contents);
     let data: Env = toml::from_str(&toml_contents)?;
-    vprintln!(v, "Contents:\n{:?}", data);
+    debug!("Contents:\n{:?}", data);
 
     // convert input TOML to shell script
     let output = data.to_string(cli.format);

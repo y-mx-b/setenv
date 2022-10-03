@@ -1,5 +1,6 @@
 use crate::format::*;
 use clap::Parser;
+use clap_verbosity_flag::Verbosity;
 use std::path::PathBuf;
 
 #[derive(Parser)]
@@ -19,6 +20,6 @@ pub struct Cli {
     pub format: Format,
 
     /// Print extra information
-    #[clap(short, long, action)]
-    pub verbose: bool,
+    #[clap(flatten)]
+    pub verbose: Verbosity,
 }
