@@ -43,7 +43,6 @@ fn main() -> Result<ExitCode> {
     let mut output_file = fs::File::create(output_path)?;
 
     // write output to file
-    // TODO do it more safely
     output_file.write_all(output.as_bytes())?;
     Ok(ExitCode::SUCCESS)
 }
