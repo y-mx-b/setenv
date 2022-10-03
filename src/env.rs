@@ -8,7 +8,7 @@ const fn _vi_mode_default() -> bool {
 
 #[derive(Debug, Deserialize)]
 pub struct Env {
-    #[serde(alias = "env-vars")]
+    #[serde(alias = "env-vars", default)]
     env_vars: HashMap<String, Vec<String>>,
     #[serde(alias = "vi-mode", default = "_vi_mode_default")]
     vi_mode: bool,
