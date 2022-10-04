@@ -1,14 +1,14 @@
 = setenv
 :toc: macro
 
-Generate scripts to set environment variables for various shells.
+Generate scripts to set your environment for various shells.
 
 toc::[]
 
 == Features
 
 - Set PATH and other environment variables in a single file
-- Set aliases/abbreviations to be used across different shells (TODO)
+- Set aliases/abbreviations to be used across different shells
 
 == Usage
 
