@@ -2,11 +2,15 @@ use crate::format::Format;
 use serde::Deserialize;
 use std::collections::HashMap;
 
+const fn _vi_mode_default() -> bool {
+    false
+}
+
 #[derive(Debug, Deserialize)]
 pub struct Env {
     #[serde(alias = "env-vars")]
     env_vars: HashMap<String, Vec<String>>,
-    #[serde(alias = "vi-mode")]
+    #[serde(alias = "vi-mode", default = "_vi_mode_default")]
     vi_mode: bool,
     // TODO add aliases
 }
