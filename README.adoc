@@ -1,0 +1,12 @@
+= setenv
+:toc: macro
+
+Generate scripts to set environment variables for various shells.
+
+toc::[]
+
+== Features
+
+== Usage
+
+== TODO
