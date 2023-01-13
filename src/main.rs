@@ -1,4 +1,5 @@
 mod cli;
+mod helper;
 
 use cli::*;
 use clap::Parser;
@@ -6,6 +7,7 @@ use clap::Parser;
 fn main() {
     let cli = Cli::parse();
 
+    let v = cli.verbose;
     let name = match cli {
         Cli {
             output: Some(name),
@@ -18,8 +20,10 @@ fn main() {
             output: None,
             ..
         } => {
+                // WARNING will crash if file name containts invalid Unicode
                 file.file_name().unwrap().to_str().unwrap().to_string()
             }
     };
-    println!("output name: {}", name);
+
+    vprintln!(v, "File name: {}", name);
 }
