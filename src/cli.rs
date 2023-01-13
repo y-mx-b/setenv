@@ -1,5 +1,6 @@
-use clap::{ValueEnum, Parser};
+use clap::Parser;
 use std::path::PathBuf;
+use crate::format::*;
 
 #[derive(Parser)]
 #[clap(author, version, about, long_about = None)]
@@ -24,13 +25,4 @@ pub struct Cli {
     /// Print extra information
     #[clap(short, long, action)]
     pub verbose: bool,
-}
-
-#[derive(Copy, Clone, Debug, ValueEnum)]
-pub enum Format {
-    Sh,
-    Bash,
-    Zsh,
-    Tcsh,
-    Fish,
 }
