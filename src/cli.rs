@@ -18,10 +18,6 @@ pub struct Cli {
     #[clap(short, long, value_enum, value_parser)]
     pub format: Format,
 
-    /// The path of the shell to use in the hashbang
-    #[clap(short, long, value_parser)]
-    pub shell_path: Option<PathBuf>,
-
     /// Print extra information
     #[clap(short, long, action)]
     pub verbose: bool,

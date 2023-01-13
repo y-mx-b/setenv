@@ -1,0 +1,4 @@
+vi-mode = true
+
+[env-vars]
+path = ["/usr/bin", "/usr/local/bin"]
