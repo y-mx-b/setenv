@@ -10,3 +10,6 @@ description = "Generate scripts to set environment variables for various shells.
 toml = "0.5"
 serde = { version = "1.0", features = ["derive"] }
 clap = { version = "4", features = ["derive"] }
+clap-verbosity-flag = "2"
+env_logger = "0.9"
+clap_complete = "4"
