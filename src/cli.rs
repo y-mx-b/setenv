@@ -15,7 +15,7 @@ pub struct Cli {
 
     /// The format to use
     #[clap(default_value_t = Format::Sh)]
-    #[clap(short, long, arg_enum, value_parser)]
+    #[clap(short, long, value_enum, value_parser)]
     pub format: Format,
 
     /// The path of the shell to use in the hashbang
