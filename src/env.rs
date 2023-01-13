@@ -16,6 +16,7 @@ pub struct Env {
 }
 
 impl Env {
+    // TODO split into separate functions again maybe?
     pub fn to_string(self, format: Format) -> String {
         let mut output: Vec<String> = Vec::new();
 
