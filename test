@@ -1,2 +1,0 @@
-PATH="$PATH:/usr/bin:/usr/local/bin"; export PATH
-set -o vi
