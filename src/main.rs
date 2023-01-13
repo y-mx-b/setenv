@@ -11,13 +11,13 @@ use std::io::Write;
 use std::path::PathBuf;
 use std::process::ExitCode;
 
-fn main() -> ExitCode {
+fn main() -> std::io::Result<ExitCode> {
     let cli = Cli::parse();
 
     // exit if input is not a file
     if !cli.file.is_file() {
         eprintln!("Input file is not a file.");
-        return ExitCode::FAILURE;
+        return Ok(ExitCode::FAILURE);
     }
 
     // initialize relevant information
@@ -34,19 +34,18 @@ fn main() -> ExitCode {
 
     // TODO do this safely, better error messages
     // decode env file from TOML
-    let toml_contents = fs::read_to_string(cli.file).expect("Failed to read file");
-    let data: Env = toml::from_str(&toml_contents).unwrap();
+    let toml_contents = fs::read_to_string(cli.file)?;
+    let data: Env = toml::from_str(&toml_contents)?;
     vprintln!(v, "Contents:\n{:?}", data);
 
     // convert input TOML to shell script
     let output = data.to_string(cli.format);
 
     // create new output file, clear if already exists
-    let mut output_file = fs::File::create(output_path).unwrap();
+    let mut output_file = fs::File::create(output_path)?;
 
     // write output to file
     // TODO do it more safely
-    output_file.write_all(output.as_bytes()).unwrap();
-
-    ExitCode::SUCCESS
+    output_file.write_all(output.as_bytes())?;
+    Ok(ExitCode::SUCCESS)
 }
