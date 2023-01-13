@@ -9,6 +9,7 @@ use format::*;
 use std::fs;
 use env::Env;
 use std::io::Write;
+use std::path::PathBuf;
 
 fn main() {
     let cli = Cli::parse();
@@ -52,10 +53,23 @@ fn main() {
         Format::Fish => data.to_fish(),
         Format::Tcsh => data.to_tcsh(),
     };
-    vprintln!(v, "Output:\n{}", output);
+
+    // create new output file, clear if already exists
+    let mut output_file = fs::File::create(output_name).unwrap();
+
+    // add hashbang
+    // TODO do it more safely
+    let shell_path: PathBuf = match cli.shell_path {
+        Some(shell) => shell,
+        None => match cli.format {
+            Format::Sh => PathBuf::from("/usr/bin/sh"),
+            Format::Fish => PathBuf::from("/usr/bin/fish"),
+            Format::Tcsh => PathBuf::from("/usr/bin/tcsh"),
+        }
+    };
+    output_file.write_all(vec!["#!", shell_path.to_str().unwrap()].join("").as_bytes()).unwrap();
 
     // write output to file
     // TODO do it more safely
-    let mut output_file = fs::File::create(output_name).unwrap();
     output_file.write_all(output.as_bytes()).unwrap();
 }
