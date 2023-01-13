@@ -8,19 +8,25 @@ const fn _vi_mode_default() -> bool {
 
 #[derive(Debug, Deserialize)]
 pub struct Env {
-    #[serde(alias = "env-vars", default)]
-    env_vars: HashMap<String, Vec<String>>,
     #[serde(alias = "vi-mode", default = "_vi_mode_default")]
     vi_mode: bool,
+    #[serde(alias = "env-vars", default)]
+    env_vars: HashMap<String, Vec<String>>,
     #[serde(default)]
-    aliases: HashMap<String, Vec<String>>,
+    aliases: HashMap<String, String>,
+    // TODO add functions
 }
 
 impl Env {
-    // TODO implement aliases
     fn to_shell(self) -> Vec<String> {
         let mut output: Vec<String> = Vec::new();
 
+        // vi-mode
+        if self.vi_mode {
+            output.push("set -o vi".to_string())
+        }
+
+        // env-vars
         for (v, value) in self.env_vars {
             let var = v.to_uppercase(); // env vars uppercase by convention
 
@@ -34,8 +40,15 @@ impl Env {
             ));
         }
 
-        if self.vi_mode {
-            output.push("set -o vi".to_string())
+        // aliases
+        for (k, value) in self.aliases {
+            let alias = k.to_lowercase();
+
+            output.push(format!(
+                "alias {}='{}'",
+                alias,
+                value
+            ));
         }
 
         output
@@ -44,6 +57,12 @@ impl Env {
     fn to_fish(self) -> Vec<String> {
         let mut output: Vec<String> = Vec::new();
 
+        // vi-mode
+        if self.vi_mode {
+            output.push("fish_vi_key_bindings".to_string());
+        }
+
+        // env-vars
         for (v, mut value) in self.env_vars {
             let var = v.to_uppercase();
             value = value
@@ -52,11 +71,13 @@ impl Env {
                 .collect();
 
             // separate with spaces for arrays
-            output.push(format!("set -gx ${} {}", var, value.join(" ")));
+            output.push(format!("set -gx {} ${} {}", var, var, value.join(" ")));
         }
 
-        if self.vi_mode {
-            output.push("fish_vi_key_bindings".to_string());
+        // aliases
+        for (k, value) in self.aliases {
+            let alias = k.to_lowercase();
+            output.push(format!("alias {} '{}'", alias, value));
         }
 
         output
@@ -65,18 +86,29 @@ impl Env {
     fn to_tcsh(self) -> Vec<String> {
         let mut output: Vec<String> = Vec::new();
 
-        for (v, mut value) in self.env_vars {
-            let var = v.to_uppercase();
-            value = value
-                .iter_mut()
-                .map(|item| format!("\"{}\"", item))
-                .collect();
-
-            output.push(format!("setenv {} = (${} {})", var, var, value.join(" ")));
-        }
-
+        // vi-mode
         if self.vi_mode {
             output.push("bindkey -v".to_string());
+        }
+
+        // env-vars
+        // TODO errors out if var is not set already
+        for (v, value) in self.env_vars {
+            let var = v.to_uppercase();
+
+            output.push(format!(
+                "setenv {} \"${{{}}}:{}:\"",
+                var,
+                var,
+                value.join(":"),
+            ));
+        }
+
+        // aliases
+        for (k, value) in self.aliases {
+            let alias = k.to_uppercase();
+
+            output.push(format!("alias {} '{}'", alias, value));
         }
 
         output
